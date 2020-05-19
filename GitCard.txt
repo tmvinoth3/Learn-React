@@ -1,0 +1,80 @@
+function Card(props) {
+  return (
+    <div>
+      <img src={props.user.avatar_url}/>
+    <div>
+      <label>{props.user.name}</label>
+      <br/>
+      <label>{props.user.login}</label>
+    </div>
+      </div>
+
+  )
+}
+
+function CardList(props){
+  return (
+   <ul>
+    {
+      props.users.map(user => <Card user={user}/>)
+    }
+   </ul>
+  );
+
+}
+
+function Form(props){
+  const [uname, setName] = useState("fc");
+  
+  function HadleSubmitClick(e){
+    e.preventDefault();
+    var giturl = "https://api.github.com/users/"+uname;
+    fetch(giturl).then(res => res.json())
+    .then(function(res) {
+      props.onSubmit(res);
+    } );
+    
+  }
+  
+  function HandleChange(e){
+    setName(e.target.value);
+  }
+  
+  return(
+      <form onSubmit={HadleSubmitClick}>
+    <input value={uname} onChange={HandleChange}/>
+       <input type="submit"/>
+  </form>
+  );
+
+}
+
+function App(){
+  
+   const [users, setUsers] = useState(gusers);
+  
+    function UpdateUsers(gituser){
+      setUsers([...users, gituser]);
+    }
+  
+  return(
+    <div>
+   <Form onSubmit={UpdateUsers}/>
+  <CardList users={users}/>
+      </div>
+  )
+
+}
+
+const gusers = [{
+  "login": "tmvinoth3",
+  "id": 24472947,
+  "avatar_url": "https://avatars2.githubusercontent.com/u/24472947?v=4",
+  "name": "Vinothkumar",
+}];
+
+ReactDOM.render(
+  <App />,
+  mountNode,
+)
+
